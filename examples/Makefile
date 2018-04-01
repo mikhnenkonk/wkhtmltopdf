@@ -1,5 +1,5 @@
 CFLAGS= -I ../include 
-LDFLAGS=-L ../bin -lwkhtmltox -Wall -ansi -pedantic -ggdb
+LDFLAGS=-L ../bin -lwkhtmltox -Wall -ansi -pedantic
 
 EXES=pdf_c_api image_c_api
 

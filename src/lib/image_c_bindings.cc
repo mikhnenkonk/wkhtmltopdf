@@ -65,7 +65,7 @@ void MyImageConverter::progressChanged(int progress) {
 }
 
 void MyImageConverter::finished(bool ok) {
-	if (finished_cb) (finished_cb)(reinterpret_cast<wkhtmltoimage_converter*>(this), ok);
+//    if (finished_cb) (finished_cb)(reinterpret_cast<wkhtmltoimage_converter*>(this), ok);
 }
 
 MyImageConverter::MyImageConverter(settings::ImageGlobal * gs, const QString * data):

@@ -26,7 +26,7 @@
 
 /* Print out loading progress information */
 void progress_changed(wkhtmltoimage_converter * c, int p) {
-	printf("%3d%%\r",p);
+	printf("%3d%%\r\n",p);
 	fflush(stdout);
 }
 
@@ -64,8 +64,9 @@ int main() {
 	gs = wkhtmltoimage_create_global_settings();
 
 	/* We want to convert the qstring documentation page */
-	wkhtmltoimage_set_global_setting(gs, "in", "http://www.google.com/");
+	wkhtmltoimage_set_global_setting(gs, "in", "file:///Users/n.mikhnenko/Courses/M17/mti/testenv/wkhtmltopdf/examples/example.html");
 	wkhtmltoimage_set_global_setting(gs, "fmt", "jpeg");
+	wkhtmltoimage_set_global_setting(gs, "out", "out123.jpeg");
 
 	/* Create the actual converter object used to convert the pages */
 	c = wkhtmltoimage_create_converter(gs, NULL);
@@ -86,6 +87,7 @@ int main() {
 	if (!wkhtmltoimage_convert(c))
 		fprintf(stderr, "Conversion failed!");
 
+	printf("done!<|\n");	
 	/* Output possible http error code encountered */
 	printf("httpErrorCode: %d\n", wkhtmltoimage_http_error_code(c));
 

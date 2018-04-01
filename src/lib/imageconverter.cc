@@ -222,14 +222,16 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
 			fail();
 		}
 	}
-	loadProgress(100);
+    loadProgress(100);
 
 	currentPhase = 2;
 	emit out.phaseChanged();
 	conversionDone = true;
-	emit out.finished(true);
+    loadProgress(101);
+    emit out.finished(true);
+    loadProgress(102);
 
-	qApp->exit(0); // quit qt's event handling
+//    qApp->exit(0); // quit qt's event handling
 }
 
 Converter & ImageConverterPrivate::outer() {
