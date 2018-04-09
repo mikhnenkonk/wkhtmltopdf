@@ -35,6 +35,7 @@
 #include <QWebFrame>
 #include <QWebPage>
 #include <qapplication.h>
+#include <QString>
 
 #ifdef Q_OS_WIN32
 #include <fcntl.h>
@@ -145,7 +146,7 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
 	QImage image;
 	QFile file;
 	QBuffer buffer(&outputData);
-	QIODevice * dev = &file;
+    QIODevice * dev = &file;
 
 	bool openOk=true;
 	// output image
@@ -204,16 +205,36 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
 	frame->render(&painter);
 	painter.end();
 
-	//loadProgress(30);
-	// perform filter(s)
-	//if (settings.crop.width > 0 && settings.crop.height > 0)
-	//	image=image.copy(settings.crop.left,settings.crop.top,settings.crop.width,settings.crop.height);
-	//loadProgress(50);
-	//if (settings.scale.width > 0 && settings.scale.height > 0) {
-		// todo: perhaps get more user options to change aspect ration and scaling mode?
-	//	image=image.scaled(settings.scale.width,settings.scale.height,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
-	//}
-	//loadProgress(80);
+    QWebElement parentElement = loaderObject->page.mainFrame()->findFirstElement("semantics");
+    QWebElement firstElement = parentElement.firstChild();
+    while (parentElement.tagName() != "annotation")
+    {
+        if ((firstElement = firstElement.firstChild()))
+        {
+            if ((firstElement = firstElement.nextSibling()))
+            parentElement = parentElement.nextSibling();
+            firstElement = firstElement
+        }
+    }
+    out.warning(QString("rect.left: %1; rect.top: %2").arg(-rect.left()).arg(-rect.top()));
+    out.warning(QString("mainframe html text: %1").arg(loaderObject->page.mainFrame()->toHtml()));
+    out.warning(QString("mainframe contents size(width;height): %1;%2").arg(loaderObject->page.mainFrame()->contentsSize().width()).
+                arg(loaderObject->page.mainFrame()->contentsSize().height()));
+    out.warning(QString("%1 width size(width;height): %2;%3").arg("mo").arg(loaderObject->page.mainFrame()->findFirstElement("mo").geometry().width())
+                .arg(loaderObject->page.mainFrame()->findFirstElement("mo").geometry().height()));
+    out.warning(QString("rect.left: %1; rect.top: %2").arg(loaderObject->page.mainFrame()->findFirstElement("mo").geometry().topLeft().x())
+                .arg(loaderObject->page.mainFrame()->findFirstElement("mo").geometry().topLeft().y()));
+
+    loadProgress(30);
+//     perform filter(s)
+//    if (settings.crop.width > 0 && settings.crop.height > 0)
+//        image=image.copy(settings.crop.left,settings.crop.top,settings.crop.width,settings.crop.height);
+//    loadProgress(50);
+//    if (settings.scale.width > 0 && settings.scale.height > 0) {
+//         todo: perhaps get more user options to change aspect ration and scaling mode?
+//        image=image.scaled(settings.scale.width,settings.scale.height,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+//    }
+//    loadProgress(80);
 
 	if (settings.fmt != "svg") {
 		QByteArray fmt=settings.fmt.toLatin1();
@@ -231,7 +252,7 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
     emit out.finished(true);
     loadProgress(102);
 
-//    qApp->exit(0); // quit qt's event handling
+    qApp->exit(0); // quit qt's event handling
 }
 
 Converter & ImageConverterPrivate::outer() {
