@@ -40,6 +40,7 @@ private:
 	QString inputData;
 
 	ImageConverter & out;
+    QWebFrame *getFrameAt(LoaderObject *object, QPoint pos);
 	void clearResources();
 
 	LoaderObject * loaderObject;

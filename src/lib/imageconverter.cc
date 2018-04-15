@@ -58,7 +58,12 @@ ImageConverterPrivate::ImageConverterPrivate(ImageConverter & o, wkhtmltopdf::se
 	connect(&loader, SIGNAL(loadProgress(int)), this, SLOT(loadProgress(int)));
 	connect(&loader, SIGNAL(loadFinished(bool)), this, SLOT(pagesLoaded(bool)));
 	connect(&loader, SIGNAL(error(QString)), this, SLOT(forwardError(QString)));
-	connect(&loader, SIGNAL(warning(QString)), this, SLOT(forwardWarning(QString)));
+    connect(&loader, SIGNAL(warning(QString)), this, SLOT(forwardWarning(QString)));
+}
+
+QWebFrame *ImageConverterPrivate::getFrameAt(LoaderObject *object, QPoint pos)
+{ 
+    return object->page.frameAt(pos);
 }
 
 void ImageConverterPrivate::beginConvert() {
@@ -205,25 +210,51 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
 	frame->render(&painter);
 	painter.end();
 
-    QWebElement parentElement = loaderObject->page.mainFrame()->findFirstElement("semantics");
-    QWebElement firstElement = parentElement.firstChild();
-    while (parentElement.tagName() != "annotation")
+    if (getFrameAt(loaderObject, QPoint(470,16)) == nullptr)
+        out.warning("Invalid pos");
+    else
     {
-        if ((firstElement = firstElement.firstChild()))
+        QWebElement parentElement = loaderObject->page.mainFrame()->findFirstElement("semantics");
+        while(1)
         {
-            if ((firstElement = firstElement.nextSibling()))
-            parentElement = parentElement.nextSibling();
-            firstElement = firstElement
+            if (!parentElement.nextSibling().isNull() && parentElement.nextSibling().geometry().contains(QPoint(470,16)))
+            {
+                parentElement = parentElement.nextSibling();
+                out.warning(QString("go to next sibling: %1").arg(parentElement.tagName()));
+                continue;
+            }
+            else
+            if (!parentElement.firstChild().isNull())
+            {
+                parentElement = parentElement.firstChild();
+                out.warning(QString("go to first child: %1").arg(parentElement.tagName()));
+                continue;
+            }
+            out.warning(QString("frame at (470,16): %1").arg(parentElement.tagName()));
+            break;
         }
     }
+//    QWebElement firstElement = parentElement.firstChild();
+//    while (parentElement.tagName() != "annotation")
+//    {
+//        if ((firstElement = firstElement.firstChild()))
+//        {
+//            if ((firstElement = firstElement.nextSibling()))
+//                parentElement = parentElement.nextSibling();
+
+//        }
+//    }
+
+    QWebFrame *frameat = getFrameAt(loaderObject, QPoint(456,16));
+    out.warning(QString("frame at (10,10): %1").arg(frameat->contentsSize().width()));
     out.warning(QString("rect.left: %1; rect.top: %2").arg(-rect.left()).arg(-rect.top()));
     out.warning(QString("mainframe html text: %1").arg(loaderObject->page.mainFrame()->toHtml()));
     out.warning(QString("mainframe contents size(width;height): %1;%2").arg(loaderObject->page.mainFrame()->contentsSize().width()).
                 arg(loaderObject->page.mainFrame()->contentsSize().height()));
-    out.warning(QString("%1 width size(width;height): %2;%3").arg("mo").arg(loaderObject->page.mainFrame()->findFirstElement("mo").geometry().width())
-                .arg(loaderObject->page.mainFrame()->findFirstElement("mo").geometry().height()));
-    out.warning(QString("rect.left: %1; rect.top: %2").arg(loaderObject->page.mainFrame()->findFirstElement("mo").geometry().topLeft().x())
-                .arg(loaderObject->page.mainFrame()->findFirstElement("mo").geometry().topLeft().y()));
+    out.warning(QString("%1 width size(width;height): %2;%3").arg("mo").arg(loaderObject->page.mainFrame()->findFirstElement("mi").geometry().width())
+                .arg(loaderObject->page.mainFrame()->findFirstElement("mi").geometry().height()));
+    out.warning(QString("rect.left: %1; rect.top: %2").arg(loaderObject->page.mainFrame()->findFirstElement("mi").geometry().topLeft().x())
+                .arg(loaderObject->page.mainFrame()->findFirstElement("mi").geometry().topLeft().y()));
 
     loadProgress(30);
 //     perform filter(s)
@@ -277,3 +308,4 @@ const QByteArray & ImageConverter::output() {
 }
 
 }
+

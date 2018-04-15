@@ -43,7 +43,9 @@ void error(wkhtmltoimage_converter * c, const char * msg) {
 
 /* Print a message to stderr when a warning is issued */
 void warning(wkhtmltoimage_converter * c, const char * msg) {
-	fprintf(stderr, "Warning: %s\n", msg);
+        printf("Warning: %s\r\n", msg);
+        fflush(stdout);
+//	fprintf(stderr, "Warning: %s\n", msg);
 }
 
 /* Main method convert image */
