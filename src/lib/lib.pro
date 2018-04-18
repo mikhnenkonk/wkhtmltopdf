@@ -43,3 +43,5 @@ wkhtmltox.path=$$INSTALLBASE/lib
 
 DESTDIR = ../../bin
 target.path=$$INSTALLBASE/lib
+
+QT += xml
