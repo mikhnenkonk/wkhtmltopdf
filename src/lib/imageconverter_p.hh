@@ -39,11 +39,11 @@ private:
 	QByteArray outputData;
 	QString inputData;
 
-	ImageConverter & out;
-    QWebFrame *getFrameAt(LoaderObject *object, QPoint pos);
-	void clearResources();
+    ImageConverter &out;
+    uint8_t getFrameAt(const std::pair<int, int> &p);
+    void clearResources();
 
-	LoaderObject * loaderObject;
+    LoaderObject *loaderObject;
 
 public slots:
 	void pagesLoaded(bool ok);

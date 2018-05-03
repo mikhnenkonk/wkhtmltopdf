@@ -72,7 +72,8 @@ int main() {
 	 */
 	os = wkhtmltopdf_create_object_settings();
 	/* We want to convert to convert the qstring documentation page */
-	wkhtmltopdf_set_object_setting(os, "page", "http://doc.qt.io/qt-5/qstring.html");
+	//wkhtmltopdf_set_object_setting(os, "page", "http://doc.qt.io/qt-5/qstring.html");
+	wkhtmltopdf_set_object_setting(os, "page", "/Users/n.mikhnenko/Courses/M17/mti/testenv/wkhtmltopdf/examples/examplecopy.html");
 
 	/* Create the actual converter object used to convert the pages */
 	c = wkhtmltopdf_create_converter(gs);

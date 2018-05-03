@@ -62,9 +62,11 @@ ImageConverterPrivate::ImageConverterPrivate(ImageConverter & o, wkhtmltopdf::se
     connect(&loader, SIGNAL(warning(QString)), this, SLOT(forwardWarning(QString)));
 }
 
-QWebFrame *ImageConverterPrivate::getFrameAt(LoaderObject *object, QPoint pos)
-{ 
-    return object->page.frameAt(pos);
+uint8_t ImageConverterPrivate::getFrameAt(const std::pair<int, int> &p)
+{
+    if (loaderObject->page.frameAt(QPoint(p.first, p.second)) == nullptr)
+        return 0;
+    return 1;
 }
 
 void ImageConverterPrivate::beginConvert() {
@@ -75,7 +77,7 @@ void ImageConverterPrivate::beginConvert() {
 	loaderObject = loader.addResource(settings.in, settings.loadPage, &inputData);
 	updateWebSettings(loaderObject->page.settings(), settings.web);
 	currentPhase=0;
-	emit out. phaseChanged();
+    emit out.phaseChanged();
 	loadProgress(0);
 	loader.load();
 }
@@ -210,8 +212,8 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
 	painter.translate(-rect.left(), -rect.top());
 	frame->render(&painter);
 	painter.end();
-
-    if (getFrameAt(loaderObject, QPoint(470,16)) == nullptr)
+    QPoint point(470,16);
+    if (!getFrameAt(std::pair<int,int>(point.x(), point.y())))
         out.warning("Invalid pos");
     else
     {
@@ -238,7 +240,7 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
         out.warning(QString("Name^: %1").arg(parentElement.toOuterXml()));
         while(1)
         {
-            if (!parentElement.nextSibling().isNull() && parentElement.nextSibling().geometry().contains(QPoint(470,16)))
+            if (!parentElement.nextSibling().isNull() && parentElement.nextSibling().geometry().contains(point))
             {
                 parentElement = parentElement.nextSibling();
                 n = n.nextSibling();
@@ -253,7 +255,7 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
                 out.warning(QString("go to first child: %1 -> %2").arg(parentElement.tagName()).arg(parentElement.toInnerXml()));
                 continue;
             }
-            if (parentElement.geometry().contains(QPoint(470,16)))
+            if (parentElement.geometry().contains(point))
             {
 //                parentElement.encloseContentsWith();
 //                parentElement = parentElement.parent();
@@ -263,7 +265,7 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
 //                n.save(stream, QDomNode::CDATASectionNode);
 //                out.warning("Tag Name: " + str);
                 out.warning("Inner value: " + n.toElement().text());
-                out.warning(QString("frame at (470,16): %1 -> %2").arg(parentElement.tagName()).arg(n.toCharacterData().data()));
+                out.warning(QString("frame at (475,16): %1 -> %2").arg(parentElement.tagName()).arg(n.toCharacterData().data()));
             }
             break;
         }
@@ -283,8 +285,8 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
 //        }
 //    }
 
-    QWebFrame *frameat = getFrameAt(loaderObject, QPoint(456,16));
-    out.warning(QString("frame at (10,10): %1").arg(frameat->contentsSize().width()));
+//    QWebFrame *frameat = getFrameAt(QPoint(456,16));
+//    out.warning(QString("frame at (10,10): %1").arg(frameat->contentsSize().width()));
     out.warning(QString("rect.left: %1; rect.top: %2").arg(-rect.left()).arg(-rect.top()));
     out.warning(QString("mainframe html text: %1").arg(loaderObject->page.mainFrame()->toHtml()));
     out.warning(QString("mainframe contents size(width;height): %1;%2").arg(loaderObject->page.mainFrame()->contentsSize().width()).

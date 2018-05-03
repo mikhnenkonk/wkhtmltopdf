@@ -55,7 +55,7 @@ struct DLL_PUBLIC ImageGlobal {
 	//! Crop related settings
 	CropSettings crop;
 	//! Scale related settings
-	// ScaleSettings scale;
+//     ScaleSettings scale;
 
 	LoadGlobal loadGlobal;
 	LoadPage loadPage;

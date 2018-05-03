@@ -23,7 +23,7 @@ include(lib.pri)
 
 DEF_FILE = lib.def
 CONFIG(static, shared|static): DEFINES += QT_NODLL
-
+# DEFINES += "EXTENSIVE_WKHTMLTOPDF_QT_HACK"
 unix {
    headers.target=headers
    headers.files=../../include/wkhtmltox/*.h ../../include/wkhtmltox/*.inc

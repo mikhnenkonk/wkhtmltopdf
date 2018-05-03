@@ -30,9 +30,9 @@ Web::Web() :
 	enableIntelligentShrinking(true),
 	minimumFontSize(-1),
 	printMediaType(false),
-	defaultEncoding(""),
-	userStyleSheet(""),
-	enablePlugins(false) {}
+    defaultEncoding(""),
+    userStyleSheet(""),
+    enablePlugins(true) {}
 
 }
 }

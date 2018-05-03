@@ -56,7 +56,7 @@ int main() {
 	long len;
 
 	/* Init wkhtmltoimage in graphics less mode */
-	wkhtmltoimage_init(false);
+	wkhtmltoimage_init(true);
 
 	/*
 	 * Create a global settings object used to store options that are not
@@ -67,8 +67,8 @@ int main() {
 
 	/* We want to convert the qstring documentation page */
 	wkhtmltoimage_set_global_setting(gs, "in", "file:///Users/n.mikhnenko/Courses/M17/mti/testenv/wkhtmltopdf/examples/example.html");
-	wkhtmltoimage_set_global_setting(gs, "fmt", "jpeg");
-	wkhtmltoimage_set_global_setting(gs, "out", "out123.jpeg");
+	wkhtmltoimage_set_global_setting(gs, "fmt", "png");
+	wkhtmltoimage_set_global_setting(gs, "out", "out123.png");
 
 	/* Create the actual converter object used to convert the pages */
 	c = wkhtmltoimage_create_converter(gs, NULL);
@@ -85,6 +85,7 @@ int main() {
 	/* Call the warning function when a warning is issued */
 	wkhtmltoimage_set_warning_callback(c, warning);
 
+	printf("pre_convert!<|\n");	
 	/* Perform the actual conversion */
 	if (!wkhtmltoimage_convert(c))
 		fprintf(stderr, "Conversion failed!");

@@ -18,7 +18,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with wkhtmltopdf.  If not, see <http://www.gnu.org/licenses/>.
 
-
 #include "converter_p.hh"
 #include "multipageloader.hh"
 #include <QWebFrame>
@@ -38,13 +37,14 @@ namespace wkhtmltopdf {
 void ConverterPrivate::updateWebSettings(QWebSettings * ws, const settings::Web & s) const {
 #ifdef  __EXTENSIVE_WKHTMLTOPDF_QT_HACK__
 	if (!s.defaultEncoding.isEmpty())
-		ws->setDefaultTextEncoding(s.defaultEncoding);
+        ws->setDefaultTextEncoding(s.defaultEncoding);
 	if (!s.enableIntelligentShrinking) {
-		ws->setPrintingMaximumShrinkFactor(1.0);
-		ws->setPrintingMinimumShrinkFactor(1.0);
+        ws->setPrintingMaximumShrinkFactor(1.0);
+        ws->setPrintingMinimumShrinkFactor(1.0);
 	}
-	ws->setPrintingMediaType(s.printMediaType?"print":"screen");
+    ws->setPrintingMediaType(s.printMediaType?"print":"screen");
 #endif
+//    ws->setFontFamily(QWebSettings::StandardFont, "/Users/n.mikhnenko/Courses/M17/mti/latexpp/katex/fonts/KaTeX_Main-Regular.woff2");
 	ws->setAttribute(QWebSettings::JavaEnabled, s.enablePlugins);
 	ws->setAttribute(QWebSettings::JavascriptEnabled, s.enableJavascript);
 	ws->setAttribute(QWebSettings::JavascriptCanOpenWindows, false);
@@ -54,8 +54,8 @@ void ConverterPrivate::updateWebSettings(QWebSettings * ws, const settings::Web 
 	ws->setAttribute(QWebSettings::PrintElementBackgrounds, s.background);
 	ws->setAttribute(QWebSettings::AutoLoadImages, s.loadImages);
 	ws->setAttribute(QWebSettings::PluginsEnabled, s.enablePlugins);
-	if (!s.userStyleSheet.isEmpty())
-		ws->setUserStyleSheetUrl(MultiPageLoader::guessUrlFromString(s.userStyleSheet));
+    if (!s.userStyleSheet.isEmpty())
+        ws->setUserStyleSheetUrl(MultiPageLoader::guessUrlFromString(s.userStyleSheet));
 }
 
 void ConverterPrivate::fail() {
@@ -91,7 +91,7 @@ bool ConverterPrivate::convert() {
 	conversionDone=false;
 	beginConvert();
 	while (!conversionDone)
-		qApp->processEvents(QEventLoop::WaitForMoreEvents | QEventLoop::AllEvents);
+        qApp->processEvents(QEventLoop::AllEvents);
 	return !error;
 }
 

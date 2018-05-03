@@ -51,7 +51,7 @@ void dumpDefaultTOCStyleSheet(QTextStream & stream, settings::TableOfContent & s
 		   << "          li {list-style: none;}" << endl
 		   << "          ul {" << endl
 		   << "            font-size: 20px;" << endl
-		   << "            font-family: arial;" << endl
+           << "            font-family: arial;" << endl
 		   << "          }" << endl
 		   << "          ul ul {font-size: " << (s.fontScale*100.0) << "%; }" << endl
 		   << "          ul {padding-left: 0em;}" << endl
