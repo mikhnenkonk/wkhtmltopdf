@@ -29,6 +29,9 @@ typedef struct wkhtmltoimage_global_settings wkhtmltoimage_global_settings;
 struct wkhtmltoimage_converter;
 typedef struct wkhtmltoimage_converter wkhtmltoimage_converter;
 
+struct wkhtmltoimage_element;
+typedef struct wkhtmltoimage_element wkhtmltoimage_element;
+
 typedef void (*wkhtmltoimage_str_callback)(wkhtmltoimage_converter * converter, const char * str);
 typedef void (*wkhtmltoimage_int_callback)(wkhtmltoimage_converter * converter, const int val);
 typedef void (*wkhtmltoimage_void_callback)(wkhtmltoimage_converter * converter);
@@ -51,9 +54,22 @@ CAPI(void) wkhtmltoimage_set_error_callback(wkhtmltoimage_converter * converter,
 CAPI(void) wkhtmltoimage_set_phase_changed_callback(wkhtmltoimage_converter * converter, wkhtmltoimage_void_callback cb);
 CAPI(void) wkhtmltoimage_set_progress_changed_callback(wkhtmltoimage_converter * converter, wkhtmltoimage_int_callback cb);
 CAPI(void) wkhtmltoimage_set_finished_callback(wkhtmltoimage_converter * converter, wkhtmltoimage_int_callback cb);
+
 CAPI(int) wkhtmltoimage_convert(wkhtmltoimage_converter * converter);
 /* CAPI(void) wkhtmltoimage_begin_conversion(wkhtmltoimage_converter * converter); */
 /* CAPI(void) wkhtmltoimage_cancel(wkhtmltoimage_converter * converter); */
+
+/*Editing category*/
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_root_element(wkhtmltoimage_converter *converter);
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_element_at(wkhtmltoimage_converter *converter, int x, int y);
+CAPI(int) wkhtmltoimage_get_element_width(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *width);
+CAPI(int) wkhtmltoimage_get_element_height(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *height);
+CAPI(int) wkhtmltoimage_get_element_x(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *X);
+CAPI(int) wkhtmltoimage_get_element_y(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *Y);
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_next_sibling(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element);
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_first_child(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element);
+CAPI(int) wkhtmltoimage_set_changes(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element);
+/*End of editing category*/
 
 CAPI(int) wkhtmltoimage_current_phase(wkhtmltoimage_converter * converter);
 CAPI(int) wkhtmltoimage_phase_count(wkhtmltoimage_converter * converter);

@@ -22,7 +22,7 @@ static const uint qt_meta_data_wkhtmltopdf__PdfConverterPrivate[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -35,8 +35,16 @@ static const uint qt_meta_data_wkhtmltopdf__PdfConverterPrivate[] = {
       84,   62,   65,   65, 0x0a,
      100,   62,   65,   65, 0x0a,
      120,   65,   65,   65, 0x0a,
-     136,   65,   65,   65, 0x0a,
-     151,   65,   65,   65, 0x0a,
+     136,  159,  163,   65, 0x0a,
+     176,   65,  163,   65, 0x0a,
+     194,  230,  244,   65, 0x0a,
+     248,  285,  244,   65, 0x0a,
+     300,  332,  244,   65, 0x0a,
+     342,  374,  244,   65, 0x0a,
+     384,  421,  163,   65, 0x0a,
+     429,  421,  163,   65, 0x0a,
+     465,   65,   65,   65, 0x0a,
+     480,   65,   65,   65, 0x0a,
 
        0        // eod
 };
@@ -46,6 +54,14 @@ static const char qt_meta_stringdata_wkhtmltopdf__PdfConverterPrivate[] = {
     "measuringHeadersLoaded(bool)\0ok\0\0"
     "pagesLoaded(bool)\0tocLoaded(bool)\0"
     "headersLoaded(bool)\0printDocument()\0"
+    "_getElementAt(int,int)\0x,y\0QWebElement*\0"
+    "_getRootElement()\0_getElementWidth(QWebElement*,int*)\0"
+    "element,width\0int\0"
+    "_getElementHeight(QWebElement*,int*)\0"
+    "element,height\0_getElementX(QWebElement*,int*)\0"
+    "element,X\0_getElementY(QWebElement*,int*)\0"
+    "element,Y\0_getElementNextSibling(QWebElement*)\0"
+    "element\0_getElementFirstChild(QWebElement*)\0"
     "beginConvert()\0outer()\0"
 };
 
@@ -60,8 +76,24 @@ void wkhtmltopdf::PdfConverterPrivate::qt_static_metacall(QObject *_o, QMetaObje
         case 2: _t->tocLoaded((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 3: _t->headersLoaded((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 4: _t->printDocument(); break;
-        case 5: _t->beginConvert(); break;
-        case 6: _t->outer(); break;
+        case 5: { QWebElement* _r = _t->_getElementAt((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])));
+            if (_a[0]) *reinterpret_cast< QWebElement**>(_a[0]) = _r; }  break;
+        case 6: { QWebElement* _r = _t->_getRootElement();
+            if (_a[0]) *reinterpret_cast< QWebElement**>(_a[0]) = _r; }  break;
+        case 7: { int _r = _t->_getElementWidth((*reinterpret_cast< QWebElement*(*)>(_a[1])),(*reinterpret_cast< int*(*)>(_a[2])));
+            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
+        case 8: { int _r = _t->_getElementHeight((*reinterpret_cast< QWebElement*(*)>(_a[1])),(*reinterpret_cast< int*(*)>(_a[2])));
+            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
+        case 9: { int _r = _t->_getElementX((*reinterpret_cast< QWebElement*(*)>(_a[1])),(*reinterpret_cast< int*(*)>(_a[2])));
+            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
+        case 10: { int _r = _t->_getElementY((*reinterpret_cast< QWebElement*(*)>(_a[1])),(*reinterpret_cast< int*(*)>(_a[2])));
+            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
+        case 11: { QWebElement* _r = _t->_getElementNextSibling((*reinterpret_cast< QWebElement*(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< QWebElement**>(_a[0]) = _r; }  break;
+        case 12: { QWebElement* _r = _t->_getElementFirstChild((*reinterpret_cast< QWebElement*(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< QWebElement**>(_a[0]) = _r; }  break;
+        case 13: _t->beginConvert(); break;
+        case 14: _t->outer(); break;
         default: ;
         }
     }
@@ -99,9 +131,9 @@ int wkhtmltopdf::PdfConverterPrivate::qt_metacall(QMetaObject::Call _c, int _id,
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 15;
     }
     return _id;
 }

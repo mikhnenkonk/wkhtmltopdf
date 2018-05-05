@@ -1,4 +1,6 @@
-/*
+/* -*- mode: c++; tab-width: 4; indent-tabs-mode: t; eval: (progn (c-set-style "stroustrup") (c-set-offset 'innamespace 0)); -*-
+ * vi:set ts=4 sts=4 sw=4 noet :
+ *
  * Copyright 2010 wkhtmltopdf authors
  *
  * This file is part of wkhtmltopdf.
@@ -19,13 +21,16 @@
 
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
-#include </Users/n.mikhnenko/Courses/M17/mti/testenv/wkhtmltopdf/include/wkhtmltox/dllbegin.inc>
+#include <wkhtmltox/dllbegin.inc>
 
 struct wkhtmltoimage_global_settings;
 typedef struct wkhtmltoimage_global_settings wkhtmltoimage_global_settings;
 
 struct wkhtmltoimage_converter;
 typedef struct wkhtmltoimage_converter wkhtmltoimage_converter;
+
+struct wkhtmltoimage_element;
+typedef struct wkhtmltoimage_element wkhtmltoimage_element;
 
 typedef void (*wkhtmltoimage_str_callback)(wkhtmltoimage_converter * converter, const char * str);
 typedef void (*wkhtmltoimage_int_callback)(wkhtmltoimage_converter * converter, const int val);
@@ -49,9 +54,22 @@ CAPI(void) wkhtmltoimage_set_error_callback(wkhtmltoimage_converter * converter,
 CAPI(void) wkhtmltoimage_set_phase_changed_callback(wkhtmltoimage_converter * converter, wkhtmltoimage_void_callback cb);
 CAPI(void) wkhtmltoimage_set_progress_changed_callback(wkhtmltoimage_converter * converter, wkhtmltoimage_int_callback cb);
 CAPI(void) wkhtmltoimage_set_finished_callback(wkhtmltoimage_converter * converter, wkhtmltoimage_int_callback cb);
+
 CAPI(int) wkhtmltoimage_convert(wkhtmltoimage_converter * converter);
 /* CAPI(void) wkhtmltoimage_begin_conversion(wkhtmltoimage_converter * converter); */
 /* CAPI(void) wkhtmltoimage_cancel(wkhtmltoimage_converter * converter); */
+
+/*Editing category*/
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_root_element(wkhtmltoimage_converter *converter);
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_element_at(wkhtmltoimage_converter *converter, int x, int y);
+CAPI(int) wkhtmltoimage_get_element_width(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *width);
+CAPI(int) wkhtmltoimage_get_element_height(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *height);
+CAPI(int) wkhtmltoimage_get_element_x(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *X);
+CAPI(int) wkhtmltoimage_get_element_y(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *Y);
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_next_sibling(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element);
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_first_child(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element);
+CAPI(int) wkhtmltoimage_set_changes(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element);
+/*End of editing category*/
 
 CAPI(int) wkhtmltoimage_current_phase(wkhtmltoimage_converter * converter);
 CAPI(int) wkhtmltoimage_phase_count(wkhtmltoimage_converter * converter);
@@ -60,5 +78,5 @@ CAPI(const char *) wkhtmltoimage_progress_string(wkhtmltoimage_converter * conve
 CAPI(int) wkhtmltoimage_http_error_code(wkhtmltoimage_converter * converter);
 CAPI(long) wkhtmltoimage_get_output(wkhtmltoimage_converter * converter, const unsigned char **);
 
-#include </Users/n.mikhnenko/Courses/M17/mti/testenv/wkhtmltopdf/include/wkhtmltox/dllend.inc>
+#include <wkhtmltox/dllend.inc>
 #endif /*__IMAGE_H__*/

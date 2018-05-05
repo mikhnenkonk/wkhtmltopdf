@@ -62,11 +62,144 @@ ImageConverterPrivate::ImageConverterPrivate(ImageConverter & o, wkhtmltopdf::se
     connect(&loader, SIGNAL(warning(QString)), this, SLOT(forwardWarning(QString)));
 }
 
-uint8_t ImageConverterPrivate::getFrameAt(const std::pair<int, int> &p)
+QWebElement *ImageConverterPrivate::_getElementAt(int x, int y)
 {
-    if (loaderObject->page.frameAt(QPoint(p.first, p.second)) == nullptr)
+    QPoint point(x, y);
+    out.warning(QString("Pos %1;%2").arg(x).arg(y));
+
+    if (loaderObject->page.frameAt(point) == nullptr)
+        return nullptr;
+
+    QDomDocument doc("mydocument");
+    doc.setContent(loaderObject->page.mainFrame()->findFirstElement("div").toOuterXml());
+    QDomElement docElem = doc.documentElement();
+    QDomNode n = docElem.firstChild();
+
+    while (n.toElement().tagName() != "semantics")
+        n = n.firstChild();
+    QWebElement parentElement = loaderObject->page.mainFrame()->findFirstElement("semantics");
+    out.warning(QString("Name^: %1").arg(parentElement.toOuterXml()));
+    while(1)
+    {
+        if (!parentElement.nextSibling().isNull() && parentElement.nextSibling().geometry().contains(point))
+        {
+            parentElement = parentElement.nextSibling();
+            n = n.nextSibling();
+            out.warning(QString("go to next sibling: %1 -> %2").arg(parentElement.tagName()).arg(parentElement.toInnerXml()));
+            continue;
+        }
+        else
+        if (!parentElement.firstChild().isNull())
+        {
+            parentElement = parentElement.firstChild();
+            n = n.firstChild();
+            out.warning(QString("go to first child: %1 -> %2").arg(parentElement.tagName()).arg(parentElement.toInnerXml()));
+            continue;
+        }
+        if (parentElement.geometry().contains(point))
+        {
+            out.warning("Inner value: " + n.toElement().text());
+            out.warning(QString("frame at (475,16): %1 -> %2").arg(parentElement.tagName()).arg(n.toCharacterData().data()));
+            return new QWebElement(parentElement);
+        }
+        break;
+    }
+    out.warning(QString("Name: %1").arg(parentElement.toPlainText()));
+    return new QWebElement(parentElement);
+}
+
+QWebElement *ImageConverterPrivate::_getRootElement()
+{
+    return new QWebElement(loaderObject->page.mainFrame()->documentElement());
+}
+
+int ImageConverterPrivate::_getElementWidth(QWebElement *element, int *width)
+{
+    if (element == nullptr) {
+        out.warning(QString("Null ptr!"));
         return 0;
+    }
+    *width = element->geometry().width();
+    out.warning(QString("Elem width: %1").arg(*width));
     return 1;
+}
+
+int ImageConverterPrivate::_getElementHeight(QWebElement *element, int *height)
+{
+    if (element == nullptr)
+        return 0;
+    *height = element->geometry().height();
+    return 1;
+}
+
+int ImageConverterPrivate::_getElementX(QWebElement *element, int *X)
+{
+    if (element == nullptr)
+        return 0;
+    *X = element->geometry().topLeft().x();
+    return 1;
+}
+
+int ImageConverterPrivate::_getElementY(QWebElement *element, int *Y)
+{
+    if (element == nullptr)
+        return 0;
+    *Y = element->geometry().topLeft().y();
+    return 1;
+}
+
+QWebElement *ImageConverterPrivate::_getElementNextSibling(QWebElement *element)
+{
+    if (element == nullptr)
+        return nullptr;
+    return new QWebElement(element->nextSibling());
+}
+
+QWebElement *ImageConverterPrivate::_getElementFirstChild(QWebElement *element)
+{
+    if (element == nullptr)
+        return nullptr;
+    return new QWebElement(element->firstChild());
+}
+
+QWebElement *ImageConverter::getElementAt(int x, int y)
+{
+    return priv()._getElementAt(x, y);
+}
+
+QWebElement *ImageConverter::getRootElement()
+{
+    return priv()._getRootElement();
+}
+
+int ImageConverter::getElementWidth(QWebElement *element, int *width)
+{
+    return priv()._getElementWidth(element, width);
+}
+
+int ImageConverter::getElementHeight(QWebElement *element, int *height)
+{
+    return priv()._getElementHeight(element, height);
+}
+
+int ImageConverter::getElementX(QWebElement *element, int *X)
+{
+    return priv()._getElementX(element, X);
+}
+
+int ImageConverter::getElementY(QWebElement *element, int *Y)
+{
+    return priv()._getElementY(element, Y);
+}
+
+QWebElement *ImageConverter::getElementNextSibling(QWebElement *element)
+{
+    return priv()._getElementNextSibling(element);
+}
+
+QWebElement *ImageConverter::getElementFirstChild(QWebElement *element)
+{
+    return priv()._getElementFirstChild(element);
 }
 
 void ImageConverterPrivate::beginConvert() {
@@ -213,67 +346,8 @@ void ImageConverterPrivate::pagesLoaded(bool ok) {
 	frame->render(&painter);
 	painter.end();
     QPoint point(470,16);
-    if (!getFrameAt(std::pair<int,int>(point.x(), point.y())))
-        out.warning("Invalid pos");
-    else
-    {
-        QDomDocument doc("mydocument");
-        doc.setContent(loaderObject->page.mainFrame()->findFirstElement("div").toOuterXml());
-        QDomElement docElem = doc.documentElement();
-        QDomNode n = docElem.firstChild();
-
-        while (n.toElement().tagName() != "semantics")
-            n = n.firstChild();
-
-//        while(!n.isNull()) {
-//            QDomElement e = n.toElement(); // попробуем преобразовать узел в элемент.
-//            if(!e.isNull()) {
-//                out.warning(e.tagName()); // узел действительно является элементом.
-//            }
-//            n = n.nextSibling();
-//            out.warning(n.toElement().tagName());
-//        }
-
-        QWebElement parentElement = loaderObject->page.mainFrame()->findFirstElement("semantics");
-
-//        QWebElement parentElement = loaderObject->page.mainFrame()->documentElement();
-        out.warning(QString("Name^: %1").arg(parentElement.toOuterXml()));
-        while(1)
-        {
-            if (!parentElement.nextSibling().isNull() && parentElement.nextSibling().geometry().contains(point))
-            {
-                parentElement = parentElement.nextSibling();
-                n = n.nextSibling();
-                out.warning(QString("go to next sibling: %1 -> %2").arg(parentElement.tagName()).arg(parentElement.toInnerXml()));
-                continue;
-            }
-            else
-            if (!parentElement.firstChild().isNull())
-            {
-                parentElement = parentElement.firstChild();
-                n = n.firstChild();
-                out.warning(QString("go to first child: %1 -> %2").arg(parentElement.tagName()).arg(parentElement.toInnerXml()));
-                continue;
-            }
-            if (parentElement.geometry().contains(point))
-            {
-//                parentElement.encloseContentsWith();
-//                parentElement = parentElement.parent();
-//                out.warning(QString("frame at (470,16): %1 -> %2").arg(parentElement.tagName()).arg(parentElement.toInnerXml()));
-//                QString str;
-//                QTextStream stream(&str);
-//                n.save(stream, QDomNode::CDATASectionNode);
-//                out.warning("Tag Name: " + str);
-                out.warning("Inner value: " + n.toElement().text());
-                out.warning(QString("frame at (475,16): %1 -> %2").arg(parentElement.tagName()).arg(n.toCharacterData().data()));
-            }
-            break;
-        }
-//        parentElement.setPlainText("Jk");
-//        parentElement.setFocus();
-//        parentElement.replace("<span>hello</span>");
-        out.warning(QString("Name: %1").arg(parentElement.toPlainText()));
-    }
+//    if (!getFrameAt(point.x(), point.y()))
+//        out.warning("Invalid pos");
 //    QWebElement firstElement = parentElement.firstChild();
 //    while (parentElement.tagName() != "annotation")
 //    {

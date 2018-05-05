@@ -1056,7 +1056,55 @@ void PdfConverterPrivate::printDocument() {
 	conversionDone = true;
 	emit out.finished(true);
 
-	qApp->exit(0); // quit qt's event handling
+    qApp->exit(0); // quit qt's event handling
+}
+
+QWebElement *PdfConverterPrivate::_getElementAt(int x, int y)
+{
+    //todo
+    return nullptr;
+}
+
+QWebElement *PdfConverterPrivate::_getRootElement()
+{
+    //todo
+    return nullptr;
+}
+
+int PdfConverterPrivate::_getElementWidth(QWebElement *element, int *width)
+{
+    //todo
+    return 1;
+}
+
+int PdfConverterPrivate::_getElementHeight(QWebElement *element, int *height)
+{
+    //todo
+    return 1;
+}
+
+int PdfConverterPrivate::_getElementX(QWebElement *element, int *X)
+{
+    //todo
+    return 1;
+}
+
+int PdfConverterPrivate::_getElementY(QWebElement *element, int *Y)
+{
+    //todo
+    return 1;
+}
+
+QWebElement *PdfConverterPrivate::_getElementNextSibling(QWebElement *element)
+{
+    //todo
+    return nullptr;
+}
+
+QWebElement *PdfConverterPrivate::_getElementFirstChild(QWebElement *element)
+{
+    //todo
+    return nullptr;
 }
 
 #ifdef __EXTENSIVE_WKHTMLTOPDF_QT_HACK__

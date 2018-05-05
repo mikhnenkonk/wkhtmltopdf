@@ -40,12 +40,19 @@ private:
 	QString inputData;
 
     ImageConverter &out;
-    uint8_t getFrameAt(const std::pair<int, int> &p);
     void clearResources();
 
     LoaderObject *loaderObject;
 
 public slots:
+    QWebElement *_getElementAt(int x, int y);
+    QWebElement *_getRootElement();
+    int _getElementWidth(QWebElement *element, int *width);
+    int _getElementHeight(QWebElement *element, int *height);
+    int _getElementX(QWebElement *element, int *X);
+    int _getElementY(QWebElement *element, int *Y);
+    QWebElement *_getElementNextSibling(QWebElement *element);
+    QWebElement *_getElementFirstChild(QWebElement *element);
 	void pagesLoaded(bool ok);
 	void beginConvert();
 

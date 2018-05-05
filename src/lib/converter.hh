@@ -24,6 +24,7 @@
 #include <QObject>
 #include <wkhtmltox/loadsettings.hh>
 #include <wkhtmltox/dllbegin.inc>
+#include <QWebElement>
 
 namespace wkhtmltopdf {
 

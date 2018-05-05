@@ -17,7 +17,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with wkhtmltopdf.  If not, see <http://www.gnu.org/licenses/>.
-#define EXTENSIVE_WKHTMLTOPDF_QT_HACK
+
 /**
  * \page pagesettings Setting
  * \section pageImageGlobal Image settings
@@ -121,7 +121,7 @@ CAPI(int) wkhtmltoimage_get_global_setting(wkhtmltoimage_global_settings * setti
 CAPI(wkhtmltoimage_converter *) wkhtmltoimage_create_converter(wkhtmltoimage_global_settings * settings, const char * data) {
 	QString str= QString::fromUtf8(data);
 	return reinterpret_cast<wkhtmltoimage_converter *>(
-		new MyImageConverter(reinterpret_cast<settings::ImageGlobal *>(settings), &str));
+        new MyImageConverter(reinterpret_cast<settings::ImageGlobal *>(settings), &str));
 }
 
 CAPI(void) wkhtmltoimage_destroy_converter(wkhtmltoimage_converter * converter) {
@@ -185,3 +185,66 @@ CAPI(long) wkhtmltoimage_get_output(wkhtmltoimage_converter * converter, const u
 	*d = (const unsigned char*)out.constData();
 	return out.size();
 }
+
+/*Editing category*/
+
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_element_at(wkhtmltoimage_converter *converter, int x, int y)
+{
+    QWebElement *_element = reinterpret_cast<MyImageConverter *>(converter)->converter.getElementAt(x, y);
+    return reinterpret_cast<wkhtmltoimage_element *>(_element);
+}
+
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_root_element(wkhtmltoimage_converter *converter)
+{
+    QWebElement *_element = reinterpret_cast<MyImageConverter *>(converter)->converter.getRootElement();
+    return reinterpret_cast<wkhtmltoimage_element *>(_element);
+}
+
+CAPI(int) wkhtmltoimage_get_element_width(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *width)
+{
+    QWebElement *_element = reinterpret_cast<QWebElement *>(element);
+    return reinterpret_cast<MyImageConverter *>(converter)->converter.getElementWidth(_element, width);
+}
+
+CAPI(int) wkhtmltoimage_get_element_height(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *height)
+{
+    QWebElement *_element = reinterpret_cast<QWebElement *>(element);
+    return reinterpret_cast<MyImageConverter *>(converter)->converter.getElementHeight(_element, height);
+}
+
+CAPI(int) wkhtmltoimage_get_element_x(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *X)
+{
+    QWebElement *_element = reinterpret_cast<QWebElement *>(element);
+    return reinterpret_cast<MyImageConverter *>(converter)->converter.getElementX(_element, X);
+}
+
+CAPI(int) wkhtmltoimage_get_element_y(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element, int *Y)
+{
+    QWebElement *_element = reinterpret_cast<QWebElement *>(element);
+    return reinterpret_cast<MyImageConverter *>(converter)->converter.getElementY(_element, Y);
+}
+
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_next_sibling(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element)
+{
+    QWebElement *_element = reinterpret_cast<QWebElement *>(element);
+    QWebElement *_next = reinterpret_cast<MyImageConverter *>(converter)->converter.getElementNextSibling(_element);
+    return reinterpret_cast<wkhtmltoimage_element *>(_next);
+}
+
+CAPI(wkhtmltoimage_element *) wkhtmltoimage_get_first_child(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element)
+{
+    QWebElement *_element = reinterpret_cast<QWebElement *>(element);
+    QWebElement *_first = reinterpret_cast<MyImageConverter *>(converter)->converter.getElementFirstChild(_element);
+    return reinterpret_cast<wkhtmltoimage_element *>(_first);
+}
+
+CAPI(int) wkhtmltoimage_set_changes(wkhtmltoimage_converter *converter, wkhtmltoimage_element *element)
+{
+    Q_UNUSED(converter);
+    Q_UNUSED(element);
+
+    //todo after implementation of mathml (html) to latex converter (javascript category)
+    return 1;
+}
+
+/*End of the editing category*/

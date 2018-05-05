@@ -36,7 +36,7 @@ public:
 	wkhtmltoimage_int_callback progress_changed;
 	wkhtmltoimage_int_callback finished_cb;
 
-	wkhtmltopdf::ImageConverter converter;
+    wkhtmltopdf::ImageConverter converter;
 
 	wkhtmltopdf::settings::ImageGlobal * globalSettings;
 

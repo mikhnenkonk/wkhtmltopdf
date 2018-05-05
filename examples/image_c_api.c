@@ -90,6 +90,11 @@ int main() {
 	if (!wkhtmltoimage_convert(c))
 		fprintf(stderr, "Conversion failed!");
 
+	wkhtmltoimage_element *e = wkhtmltoimage_get_element_at(c, 475, 16);
+	int width;
+	if (wkhtmltoimage_get_element_width(c, e, &width))
+		printf("Width: %d\n", width);
+
 	printf("done!<|\n");	
 	/* Output possible http error code encountered */
 	printf("httpErrorCode: %d\n", wkhtmltoimage_http_error_code(c));

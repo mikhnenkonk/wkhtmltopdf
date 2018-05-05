@@ -51,9 +51,16 @@ protected:
 public slots:
 	void fail();
 	void loadProgress(int progress);
-
 	virtual void beginConvert() = 0;
 	void cancel();
+    virtual QWebElement * _getRootElement() = 0;
+    virtual QWebElement *_getElementAt(int x, int y) = 0;
+    virtual int _getElementWidth(QWebElement *element, int *width) = 0;
+    virtual int _getElementHeight(QWebElement *element, int *height) = 0;
+    virtual int _getElementX(QWebElement *element, int *X) = 0;
+    virtual int _getElementY(QWebElement *element, int *Y) = 0;
+    virtual QWebElement *_getElementNextSibling(QWebElement *element) = 0;
+    virtual QWebElement *_getElementFirstChild(QWebElement *element) = 0;
 	bool convert();
 	void forwardError(QString error);
 	void forwardWarning(QString warning);

@@ -25,6 +25,7 @@
 #include <wkhtmltox/imagesettings.hh>
 
 #include <wkhtmltox/dllbegin.inc>
+#include <QWebElement>
 namespace wkhtmltopdf {
 
 class DLL_LOCAL ImageConverterPrivate;
@@ -34,6 +35,14 @@ class DLL_PUBLIC ImageConverter: public Converter {
 public:
 	ImageConverter(settings::ImageGlobal & settings, const QString * data=NULL);
 	~ImageConverter();
+    QWebElement *getElementAt(int x, int y);
+    QWebElement *getRootElement();
+    int getElementWidth(QWebElement *element, int *width);
+    int getElementHeight(QWebElement *element, int *height);
+    int getElementX(QWebElement *element, int *X);
+    int getElementY(QWebElement *element, int *Y);
+    QWebElement *getElementNextSibling(QWebElement *element);
+    QWebElement *getElementFirstChild(QWebElement *element);
 	const QByteArray & output();
 private:
 	ImageConverterPrivate * d;
